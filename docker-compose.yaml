@@ -1,0 +1,10 @@
+services:
+  db:
+    image: bitnami/postgresql:latest
+    container_name: restaurant_db
+    environment:
+      - POSTGRESQL_USERNAME=docker
+      - POSTGRESQL_PASSWORD=docker
+      - POSTGRESQL_DATABASE=restaurant
+    ports:
+      - '5432:5432'
