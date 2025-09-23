@@ -1,4 +1,5 @@
 import { accounts } from './accounts'
+import { restaurants } from './restaurants'
 import { sessions } from './sessions'
 import { users } from './users'
 import { verifications } from './verifications'
@@ -8,4 +9,5 @@ export const schema = {
   sessions,
   accounts,
   verifications,
+  restaurants
 }

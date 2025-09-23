@@ -1,8 +1,12 @@
-import { auth } from '@/auth'
 import cors from '@elysiajs/cors'
 import { openapi } from '@elysiajs/openapi'
 import { Elysia, t } from 'elysia'
 import { betterAuthPluggin, OpenAPI } from '../http/pluggins/better-auth'
+import { createRestaurantRoute } from './routes/create-restaurant'
+import { deleteRestaurantRoute } from './routes/delete-restaurant'
+import { listAllRestaurantsRoute } from './routes/list-restaurants'
+import { retrieveRestaurantRoute } from './routes/retrieve-restaurant'
+import { updateRestaurantRoute } from './routes/update-restaurant'
 
 export const app = new Elysia().use(betterAuthPluggin)
 
@@ -44,6 +48,11 @@ app.get(
     },
   }
 )
+app.use(createRestaurantRoute)
+app.use(listAllRestaurantsRoute)
+app.use(retrieveRestaurantRoute)
+app.use(updateRestaurantRoute)
+app.use(deleteRestaurantRoute)
 
 // CORS
 app.use(
