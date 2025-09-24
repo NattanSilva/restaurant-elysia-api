@@ -18,4 +18,4 @@ bun db:migrate
 bun run dev
 ```
 
-Open http://localhost:3333/ with your browser to see the result.
+Open <code>http://localhost:3333</code> with your browser to see the result and use <code>http://localhost:3333/openapi</code> route to see the api documentation.
