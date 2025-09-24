@@ -1,0 +1,289 @@
+type: collection.insomnia.rest/5.0
+name: Restaurant API
+meta:
+  id: wrk_cc94078286b548c59a92b26df14ad92b
+  created: 1758454218022
+  modified: 1758454218022
+  description: ''
+collection:
+  - name: Users
+    meta:
+      id: fld_4721f01d9d374546b684f7bf5679102e
+      created: 1758454231623
+      modified: 1758632130472
+      sortKey: -1758625837438
+      description: ''
+    children:
+      - url: '{{ _.BASE_URL }}/auth/list-accounts'
+        name: Read All
+        meta:
+          id: req_0ccf01c9cad345d8b32f9a53c420be49
+          created: 1758454242990
+          modified: 1758459047139
+          isPrivate: false
+          description: ''
+          sortKey: -1758454242990
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ _.BASE_URL }}/auth/sign-up/email'
+        name: Create
+        meta:
+          id: req_c2346570496343d7af3246dd12a88384
+          created: 1758459084872
+          modified: 1758459140574
+          isPrivate: false
+          description: ''
+          sortKey: -1758454243090
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Nattan Silva",
+            	"email": "natan@mail.com",
+            	"password": "123natan"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ _.BASE_URL }}/auth/sign-in/email'
+        name: Login
+        meta:
+          id: req_24fe6e46c27f48dd8f16904448257f4d
+          created: 1758462453997
+          modified: 1758462459108
+          isPrivate: false
+          description: ''
+          sortKey: -1758454243040
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Nattan Silva",
+            	"email": "natan@mail.com",
+            	"password": "123natan"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Restaurants
+    meta:
+      id: fld_d0c2e84a79f24a78884580515c535aaa
+      created: 1758625837338
+      modified: 1758625837338
+      sortKey: -1758625837338
+      description: ''
+    children:
+      - url: '{{ _.BASE_URL }}/restaurants'
+        name: Read All
+        meta:
+          id: req_3519990317ae475e8f597bcec7ec6345
+          created: 1758625847446
+          modified: 1758625973477
+          isPrivate: false
+          description: ''
+          sortKey: -1758625847446
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: '{{ _.BASE_URL }}/restaurants'
+        name: Create
+        meta:
+          id: req_ed4a57de16d1424aa170bfab7781fa1a
+          created: 1758625980746
+          modified: 1758632365265
+          isPrivate: false
+          description: ''
+          sortKey: -1758625847546
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Sorveteria do Natan",
+            	"contact": "87999999999"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_5dd59c64ba0c40e6a55ca9a6a3cf7b95
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_c9c6499ec7314bda91a6e20dc2e3b762
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASE_URL }}/restaurants/{% response 'body',
+          'req_3519990317ae475e8f597bcec7ec6345', 'b64::JFswXS5pZA==::46b',
+          'never', 60 %}"
+        name: Read One
+        meta:
+          id: req_7d7aebcbdf884354bf742e78953081d2
+          created: 1758626170353
+          modified: 1758626190739
+          isPrivate: false
+          description: ''
+          sortKey: -1758540045268
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASE_URL }}/restaurants/{% response 'body',
+          'req_3519990317ae475e8f597bcec7ec6345', 'b64::JFswXS5pZA==::46b',
+          'never', 60 %}"
+        name: Update
+        meta:
+          id: req_4a94af3046da494c85cb732f3ba748ae
+          created: 1758626206507
+          modified: 1758632368934
+          isPrivate: false
+          description: ''
+          sortKey: -1758497144179
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Sorveteria Atualizada do Natan"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_da4290b428694fd49fa70974da1e5116
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_c8f8109423654315bc6cbcd255fd19d6
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASE_URL }}/restaurants/{% response 'body',
+          'req_3519990317ae475e8f597bcec7ec6345', 'b64::JFswXS5pZA==::46b',
+          'never', 60 %}"
+        name: Delete
+        meta:
+          id: req_5f2b4b6a3fdf4ef295a85ebcb68a00ee
+          created: 1758626278822
+          modified: 1758632372703
+          isPrivate: false
+          description: ''
+          sortKey: -1758475693634.5
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+            id: pair_d0a90cd24c07446bb94864b4edd59744
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_4879ad36214c227a5be5a4ac51c16cc74dceeac3
+    created: 1758454218024
+    modified: 1758632314054
+  cookies:
+    - key: better-auth.session_token
+      value: NhTXK8hSgUmSzSMG2CoQNU0idWnOsSHE.Q2%2Bx1E2QM8iQKZQMmgv5hq4z%2BHG3Pebs%2FFagdffPf90%3D
+      maxAge: 604800
+      domain: localhost
+      path: /
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-09-23T12:58:34.054Z
+      lastAccessed: 2025-09-23T12:58:34.054Z
+      sameSite: lax
+      id: 7a3a0aff-81ee-44a2-8505-e0675501d07c
+    - key: better-auth.session_data
+      value: eyJzZXNzaW9uIjp7InNlc3Npb24iOnsiZXhwaXJlc0F0IjoiMjAyNS0wOS0zMFQxMjo1ODozNC4wNDNaIiwidG9rZW4iOiJOaFRYSzhoU2dVbVN6U01HMkNvUU5VMGlkV25Pc1NIRSIsImNyZWF0ZWRBdCI6IjIwMjUtMDktMjNUMTI6NTg6MzQuMDQzWiIsInVwZGF0ZWRBdCI6IjIwMjUtMDktMjNUMTI6NTg6MzQuMDQzWiIsImlwQWRkcmVzcyI6IiIsInVzZXJBZ2VudCI6Imluc29tbmlhLzExLjYuMSIsInVzZXJJZCI6IjAxOTk3NmE0LTZmMjQtNzAwMC04MDlhLTcwMDY4ZDJlN2EwYiIsImlkIjoiMDE5OTc2YTctODRiYy03MDAwLTgyMmYtZWJiZWM2MzcxOTYzIn0sInVzZXIiOnsibmFtZSI6Ik5hdHRhbiBTaWx2YSIsImVtYWlsIjoibmF0YW5AbWFpbC5jb20iLCJlbWFpbFZlcmlmaWVkIjpmYWxzZSwiaW1hZ2UiOm51bGwsImNyZWF0ZWRBdCI6IjIwMjUtMDktMjNUMTI6NTU6MTEuNzE3WiIsInVwZGF0ZWRBdCI6IjIwMjUtMDktMjNUMTI6NTU6MTEuNzE3WiIsImlkIjoiMDE5OTc2YTQtNmYyNC03MDAwLTgwOWEtNzAwNjhkMmU3YTBiIn19LCJleHBpcmVzQXQiOjE3NTg2MzI2MTQwNTIsInNpZ25hdHVyZSI6IjR0dFozdVhscDMxUS1SSjNTU0NCR3hwOElhNHJiN1NPVGpmRU1CNlhkM28ifQ
+      maxAge: 300
+      domain: localhost
+      path: /
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-09-23T12:58:34.054Z
+      lastAccessed: 2025-09-23T12:58:34.054Z
+      sameSite: lax
+      id: c9dc51eb-6498-43eb-9da3-c554ae8a48bd
+environments:
+  name: Base Environment
+  meta:
+    id: env_4879ad36214c227a5be5a4ac51c16cc74dceeac3
+    created: 1758454218023
+    modified: 1758454218023
+    isPrivate: false
+  subEnvironments:
+    - name: Develop
+      meta:
+        id: env_b49b3b01b1014c31944779fdb2d3f0e4
+        created: 1758454249360
+        modified: 1758626110709
+        isPrivate: false
+        sortKey: 1758454249360
+      data:
+        BASE_URL: http://localhost:3333
+        USER_TOKEN: "{% response 'body', 'req_24fe6e46c27f48dd8f16904448257f4d',
+          'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      color: '#1aff53'
