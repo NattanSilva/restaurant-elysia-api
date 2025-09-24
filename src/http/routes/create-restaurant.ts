@@ -7,7 +7,7 @@ export const createRestaurantRoute = new Elysia().use(betterAuthPluggin).post(
   async ({ body, status, user }) => {
     const { contact, name } = body
 
-    const { createdRestaurant } = await registRestaurant(contact, name)
+    const { createdRestaurant } = await registRestaurant(contact, name, user.id)
 
     if (!createdRestaurant) {
       return status(400, {
@@ -35,14 +35,18 @@ export const createRestaurantRoute = new Elysia().use(betterAuthPluggin).post(
     }),
     response: {
       201: t.Object({
+        id: t.String({
+          format: 'uuid',
+        }),
         name: t.String({
           examples: ["John's Pizza"],
         }),
         contact: t.String({
           examples: ['87999999999'],
         }),
-        id: t.String({
+        owner: t.String({
           format: 'uuid',
+          examples: ['123e4567-e89b-12d3-a456-426614174000'],
         }),
         createdAt: t.Date({
           examples: [new Date()],

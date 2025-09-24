@@ -5,15 +5,21 @@ import { betterAuthPluggin } from '../pluggins/better-auth'
 
 export const updateRestaurantRoute = new Elysia().use(betterAuthPluggin).patch(
   '/restaurants/:restaurantId',
-  async ({ status, params, body }) => {
+  async ({ status, params, body, user }) => {
     const { restaurantId } = params
     const { name, contact } = body
 
-    const currentRestaurant = await retrieveRestaurant(restaurantId)
+    const { restaurant } = await retrieveRestaurant(restaurantId)
 
-    if (!currentRestaurant) {
+    if (!restaurant) {
       return status(404, {
         message: 'Restaurant not found.',
+      })
+    }
+
+    if (user.id !== restaurant.owner) {
+      return status(401, {
+        message: 'You are not the owner of this restaurant.',
       })
     }
 
@@ -51,14 +57,18 @@ export const updateRestaurantRoute = new Elysia().use(betterAuthPluggin).patch(
     }),
     response: {
       200: t.Object({
+        id: t.String({
+          format: 'uuid',
+        }),
         name: t.String({
           examples: ["John's Pizza"],
         }),
         contact: t.String({
           examples: ['87999999999'],
         }),
-        id: t.String({
+        owner: t.String({
           format: 'uuid',
+          examples: ['123e4567-e89b-12d3-a456-426614174000'],
         }),
         createdAt: t.Date({
           examples: [new Date()],
@@ -70,6 +80,11 @@ export const updateRestaurantRoute = new Elysia().use(betterAuthPluggin).patch(
       400: t.Object({
         message: t.String({
           examples: ['Error in this action.'],
+        }),
+      }),
+      401: t.Object({
+        message: t.String({
+          examples: ['Unauthorized.'],
         }),
       }),
       404: t.Object({

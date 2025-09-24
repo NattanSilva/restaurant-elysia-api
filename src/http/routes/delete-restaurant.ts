@@ -1,11 +1,26 @@
 import { deleteRestaurant } from '@/app/functions/deleteRestaurant'
+import { retrieveRestaurant } from '@/app/functions/retrieveRestaurant'
 import Elysia, { t } from 'elysia'
 import { betterAuthPluggin } from '../pluggins/better-auth'
 
 export const deleteRestaurantRoute = new Elysia().use(betterAuthPluggin).delete(
   '/restaurants/:restaurantId',
-  async ({ status, params }) => {
+  async ({ status, params, user }) => {
     const { restaurantId } = params
+
+    const { restaurant } = await retrieveRestaurant(restaurantId)
+
+    if (!restaurant) {
+      return status(404, {
+        message: 'Restaurant not found.',
+      })
+    }
+
+    if (user.id !== restaurant?.owner) {
+      return status(401, {
+        message: 'You are not the owner of this restaurant.',
+      })
+    }
 
     await deleteRestaurant(restaurantId)
 
@@ -34,6 +49,16 @@ export const deleteRestaurantRoute = new Elysia().use(betterAuthPluggin).delete(
       400: t.Object({
         message: t.String({
           examples: ['Error in this action.'],
+        }),
+      }),
+      401: t.Object({
+        message: t.String({
+          examples: ['Unauthorized.'],
+        }),
+      }),
+      404: t.Object({
+        message: t.String({
+          examples: ['Restaurant not found.'],
         }),
       }),
       500: t.Object({
