@@ -7,7 +7,14 @@ export const createRestaurantRoute = new Elysia().use(betterAuthPluggin).post(
   async ({ body, status, user }) => {
     const { contact, name } = body
 
-    const { createdRestaurant } = await registRestaurant(contact, name, user.id)
+    const { createdRestaurant, status: creationStatus } =
+      await registRestaurant(contact, name, user.id)
+
+    if (creationStatus === 409) {
+      return status(409, {
+        message: 'Restaurant already exists.',
+      })
+    }
 
     if (!createdRestaurant) {
       return status(400, {
@@ -63,6 +70,11 @@ export const createRestaurantRoute = new Elysia().use(betterAuthPluggin).post(
       401: t.Object({
         message: t.String({
           examples: ['Unauthorized.'],
+        }),
+      }),
+      409: t.Object({
+        message: t.String({
+          examples: ['Restaurant already exists.'],
         }),
       }),
     },

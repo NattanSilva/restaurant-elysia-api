@@ -1,7 +1,7 @@
 import { listRestaurants } from '@/app/functions/listRestaurants'
 import Elysia, { t } from 'elysia'
 
-export const listAllRestaurantsRoute = new Elysia().get(
+export const listAllRestaurantsRoute = new Elysia({ name: 'list-all-restaurants' }).get(
   '/restaurants',
   async ({ status }) => {
     const { restaurants } = await listRestaurants()

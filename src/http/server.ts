@@ -1,4 +1,5 @@
 import { env } from '@/env'
+import kleur from 'kleur'
 import { app } from './app'
 
 const port = env.PORT
@@ -6,8 +7,12 @@ const port = env.PORT
 app.listen(port)
 
 console.log(
-  `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`
+  kleur.green(
+    `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`
+  )
 )
 console.log(
-  `📎 Elysia Docs is running at http://${app.server?.hostname}:${app.server?.port}/openapi`
+  kleur.blue(
+    `📖 Elysia Docs is running at http://${app.server?.hostname}:${app.server?.port}/openapi`
+  )
 )

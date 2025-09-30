@@ -6,6 +6,15 @@ export const registRestaurant = async (
   name: string,
   ownerId: string
 ) => {
+  const repeatedRestaurant = await db.query.restaurants.findFirst({
+    where: (restaurants, { eq }) =>
+      eq(restaurants.contact, contact) || eq(restaurants.name, name),
+  })
+
+  if (repeatedRestaurant) {
+    return { createdRestaurant: null, status: 409 }
+  }
+
   const createdRestaurant = await db
     .insert(restaurants)
     .values({
@@ -19,5 +28,5 @@ export const registRestaurant = async (
     return { createdRestaurant: null }
   }
 
-  return { createdRestaurant: createdRestaurant[0] }
+  return { createdRestaurant: createdRestaurant[0], status: 201 }
 }

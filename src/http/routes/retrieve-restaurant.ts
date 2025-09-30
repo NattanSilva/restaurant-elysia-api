@@ -1,7 +1,9 @@
 import { retrieveRestaurant } from '@/app/functions/retrieveRestaurant'
 import Elysia, { t } from 'elysia'
 
-export const retrieveRestaurantRoute = new Elysia().get(
+export const retrieveRestaurantRoute = new Elysia({
+  name: 'retrieve-restaurant',
+}).get(
   '/restaurants/:restaurantId',
   async ({ status, params }) => {
     const { restaurantId } = params
