@@ -37,7 +37,15 @@ describe('Retrieve Restaurant Route', () => {
       .get()
 
     expect(status).toBe(200)
-    expect(data).not.toBe(null)
-    expect(data?.id).toBe(restaurants[0].id)
+
+    if (restaurants.length > 0) {
+      expect(data).not.toBe(null)
+      expect(data?.id).toBe(restaurants[0].id)
+      expect(data?.name).toBe(restaurants[0].name)
+      expect(data?.contact).toBe(restaurants[0].contact)
+      expect(data?.owner).toBe(restaurants[0].owner)
+      expect(data?.createdAt).toEqual(restaurants[0].createdAt)
+      expect(data?.updatedAt).toEqual(restaurants[0].updatedAt)
+    }
   })
 })

@@ -1,5 +1,6 @@
 import { retrieveRestaurant } from '@/app/functions/retrieveRestaurant'
 import { updateRestaurant } from '@/app/functions/updateRestaurant'
+import { db } from '@/database/client'
 import Elysia, { t } from 'elysia'
 import { betterAuthPluggin } from '../pluggins/better-auth'
 
@@ -21,6 +22,34 @@ export const updateRestaurantRoute = new Elysia().use(betterAuthPluggin).patch(
       return status(401, {
         message: 'You are not the owner of this restaurant.',
       })
+    }
+
+    if (name) {
+      const sameNameRestaurant = await db.query.restaurants.findFirst({
+        where(restaurants, { eq }) {
+          return eq(restaurants.name, name)
+        },
+      })
+
+      if (sameNameRestaurant) {
+        return status(409, {
+          message: 'This name is already in use.',
+        })
+      }
+    }
+
+    if (contact) {
+      const sameContactRestaurant = await db.query.restaurants.findFirst({
+        where(restaurants, { eq }) {
+          return eq(restaurants.contact, contact)
+        },
+      })
+
+      if (sameContactRestaurant) {
+        return status(409, {
+          message: 'This contact is already in use.',
+        })
+      }
     }
 
     const { updatedRestaurant } = await updateRestaurant({
@@ -90,6 +119,11 @@ export const updateRestaurantRoute = new Elysia().use(betterAuthPluggin).patch(
       404: t.Object({
         message: t.String({
           examples: ['Restaurant not found.'],
+        }),
+      }),
+      409: t.Object({
+        message: t.String({
+          examples: ['This camp is already in use.'],
         }),
       }),
       500: t.Object({
