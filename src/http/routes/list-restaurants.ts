@@ -1,9 +1,20 @@
 import { listRestaurants } from '@/app/functions/listRestaurants'
+
 import Elysia, { t } from 'elysia'
 
-export const listAllRestaurantsRoute = new Elysia({ name: 'list-all-restaurants' }).get(
+export const listAllRestaurantsRoute = new Elysia({
+  name: 'list-all-restaurants',
+}).get(
   '/restaurants',
-  async ({ status }) => {
+  async ({ status, params }) => {
+    const { ownerId } = params
+
+    if (ownerId) {
+      const { restaurants } = await listRestaurants(ownerId)
+      
+      return status(200, restaurants)
+    }
+
     const { restaurants } = await listRestaurants()
 
     return status(200, restaurants)
@@ -15,6 +26,14 @@ export const listAllRestaurantsRoute = new Elysia({ name: 'list-all-restaurants'
       description: 'List all restaurants',
       operationId: 'listAllRestaurants',
     },
+    params: t.Object({
+      ownerId: t.Optional(
+        t.String({
+          format: 'uuid',
+          examples: ['123e4567-e89b-12d3-a456-426614174000'],
+        })
+      ),
+    }),
     response: {
       200: t.Array(
         t.Object({
