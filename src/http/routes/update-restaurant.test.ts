@@ -1,10 +1,17 @@
-import { firstUserSession, secondUserSession } from '@/mocks'
+import { fakeLogin, type LoginRespose } from '@/mocks'
 import { treaty } from '@elysiajs/eden'
 import { beforeAll, describe, expect, it } from 'bun:test'
 import { app } from '../app'
 
 const api = treaty<typeof app>(app)
 let restaurantId = ''
+let firstUserSession: LoginRespose = {} as LoginRespose
+let secondUserSession: LoginRespose = {} as LoginRespose
+
+beforeAll(async () => {
+  firstUserSession = await fakeLogin('JohnDoe@mail.com', '12345678', 'John Doe')
+  secondUserSession = await fakeLogin('faker@mail.com', '12345678', 'Faker')
+})
 
 beforeAll(async () => {
   const { data, status } = await api.restaurants.post(
@@ -145,11 +152,11 @@ describe('Update Restaurant Route', () => {
 
     expect(status).toBe(200)
     expect(data).not.toBe(null)
-    expect(data).toHaveProperty("id")
-    expect(data).toHaveProperty("name")
-    expect(data).toHaveProperty("contact")
-    expect(data).toHaveProperty("owner")
-    expect(data).toHaveProperty("createdAt")
-    expect(data).toHaveProperty("updatedAt")
+    expect(data).toHaveProperty('id')
+    expect(data).toHaveProperty('name')
+    expect(data).toHaveProperty('contact')
+    expect(data).toHaveProperty('owner')
+    expect(data).toHaveProperty('createdAt')
+    expect(data).toHaveProperty('updatedAt')
   })
 })

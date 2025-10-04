@@ -1,10 +1,18 @@
 import { listRestaurants } from '@/app/functions/listRestaurants'
-import { firstUserSession, secondUserSession } from '@/mocks'
+
+import { fakeLogin, type LoginRespose } from '@/mocks'
 import { treaty } from '@elysiajs/eden'
-import { describe, expect, it } from 'bun:test'
+import { beforeAll, describe, expect, it } from 'bun:test'
 import { app } from '../app'
 
 const api = treaty<typeof app>(app)
+let firstUserSession: LoginRespose = {} as LoginRespose
+let secondUserSession: LoginRespose = {} as LoginRespose
+
+beforeAll(async () => {
+  firstUserSession = await fakeLogin('JohnDoe@mail.com', '12345678', 'John Doe')
+  secondUserSession = await fakeLogin('faker@mail.com', '12345678', 'Faker')
+})
 
 describe('Delete Restaurant Route', () => {
   it('sould not be able to delete a restaurant with invalid type id', async () => {

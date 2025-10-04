@@ -4,7 +4,8 @@ import { restaurants } from '@/database/schemas/restaurants'
 export const registRestaurant = async (
   contact: string,
   name: string,
-  ownerId: string
+  ownerId: string,
+  email: string
 ) => {
   const repeatedRestaurant = await db.query.restaurants.findFirst({
     where: (restaurants, { eq }) =>
@@ -20,6 +21,7 @@ export const registRestaurant = async (
     .values({
       contact,
       name,
+      email,
       owner: ownerId,
     })
     .returning()

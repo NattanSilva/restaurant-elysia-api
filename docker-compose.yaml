@@ -9,3 +9,20 @@ services:
       POSTGRES_DB: restaurant
     ports:
       - "5432:5432"
+    networks:
+      - databases
+  test_db:
+    image: postgres:18-alpine3.22
+    container_name: postgres_test_db
+    restart: always
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: restaurant_tests
+    ports:
+      - "5454:5432"
+    networks:
+      - databases
+
+networks:
+  databases:

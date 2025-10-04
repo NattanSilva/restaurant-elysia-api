@@ -22,6 +22,13 @@
       "when": 1758628643683,
       "tag": "0002_broad_spiral",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1759584759858,
+      "tag": "0003_spooky_supreme_intelligence",
+      "breakpoints": true
     }
   ]
 }

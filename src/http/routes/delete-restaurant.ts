@@ -16,7 +16,7 @@ export const deleteRestaurantRoute = new Elysia().use(betterAuthPluggin).delete(
       })
     }
 
-    if (user.id !== restaurant?.owner) {
+    if (user.id !== restaurant.owner) {
       return status(401, {
         message: 'You are not the owner of this restaurant.',
       })

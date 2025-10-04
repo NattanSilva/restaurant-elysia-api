@@ -8,7 +8,7 @@ export const createRestaurantRoute = new Elysia().use(betterAuthPluggin).post(
     const { contact, name } = body
 
     const { createdRestaurant, status: creationStatus } =
-      await registRestaurant(contact, name, user.id)
+      await registRestaurant(contact, name, user.id, user.email)
 
     if (creationStatus === 409) {
       return status(409, {

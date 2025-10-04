@@ -1,20 +1,18 @@
-import { db } from '@/database/client'
-import { restaurants } from '@/database/schemas/restaurants'
 import { app } from '@/http/app'
-import { firstUserSession } from '@/mocks'
+import { fakeLogin, type LoginRespose } from '@/mocks'
 import { treaty } from '@elysiajs/eden'
-import { beforeEach, describe, expect, it } from 'bun:test'
-import { eq } from 'drizzle-orm'
+import { beforeAll, describe, expect, it } from 'bun:test'
 
 const api = treaty<typeof app>(app)
+let firstUserSession: LoginRespose = {} as LoginRespose
+let secondUserSession: LoginRespose = {} as LoginRespose
 
-beforeEach(async () => {
-  await db
-    .delete(restaurants)
-    .where(eq(restaurants.owner, firstUserSession.response.user.id))
+beforeAll(async () => {
+  firstUserSession = await fakeLogin('JohnDoe@mail.com', '12345678', 'John Doe')
+  secondUserSession = await fakeLogin('faker@mail.com', '12345678', 'Faker')
 })
 
-describe('Create Restaurant Route', () => {
+describe('Create Restaurant Route', async () => {
   it('should not be able to create a new restaurant without authentication', async () => {
     const { status, error } = await api.restaurants.post({
       name: 'Johns Pizza',
@@ -56,35 +54,6 @@ describe('Create Restaurant Route', () => {
     expect(responseError?.value).toHaveProperty('message')
   })
 
-  it('should not be able to create a duplicated restaurant', async () => {
-    await api.restaurants.post(
-      {
-        name: 'Johns Pizza',
-        contact: '87999999999',
-      },
-      {
-        headers: {
-          cookie: firstUserSession.headers.getSetCookie(),
-        },
-      }
-    )
-
-    const { status, error } = await api.restaurants.post(
-      {
-        name: 'Johns Pizza',
-        contact: '87999999999',
-      },
-      {
-        headers: {
-          cookie: firstUserSession.headers.getSetCookie(),
-        },
-      }
-    )
-
-    expect(status).toBe(409)
-    expect(error).toHaveProperty('message')
-  })
-
   it('should be able to create a new restaurant', async () => {
     const { status, data } = await api.restaurants.post(
       {
@@ -117,5 +86,22 @@ describe('Create Restaurant Route', () => {
     expect(data).toHaveProperty('createdAt')
     expect(data).toHaveProperty('updatedAt')
     expect(restaurant.owner).toBe(firstUserSession.response.user.id)
+  })
+
+  it('should not be able to create a duplicated restaurant', async () => {
+    const { status, error } = await api.restaurants.post(
+      {
+        name: 'Johns Pizza',
+        contact: '87999999999',
+      },
+      {
+        headers: {
+          cookie: firstUserSession.headers.getSetCookie(),
+        },
+      }
+    )
+
+    expect(status).toBe(409)
+    expect(error).toHaveProperty('message')
   })
 })
