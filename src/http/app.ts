@@ -1,3 +1,4 @@
+import { restaurantSchema } from '@/app/schemas/restaurant'
 import cors from '@elysiajs/cors'
 import { openapi } from '@elysiajs/openapi'
 import { Elysia } from 'elysia'
@@ -7,6 +8,14 @@ import { deleteRestaurantRoute } from './routes/delete-restaurant'
 import { listAllRestaurantsRoute } from './routes/list-restaurants'
 import { retrieveRestaurantRoute } from './routes/retrieve-restaurant'
 import { updateRestaurantRoute } from './routes/update-restaurant'
+
+const components = {
+  ...(await OpenAPI.components),
+  schemas: {
+    ...(await OpenAPI.components).schemas,
+    Restaurant: restaurantSchema,
+  },
+}
 
 export const app = new Elysia()
   .use(betterAuthPluggin)
@@ -18,7 +27,7 @@ export const app = new Elysia()
           description: 'API documentation for the Restaurant Management System',
           version: '1.0.0',
         },
-        components: await OpenAPI.components,
+        components,
         paths: await OpenAPI.getPaths(),
       },
       exclude: {
