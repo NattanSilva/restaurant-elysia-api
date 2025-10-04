@@ -1,18 +1,17 @@
 import { db } from '@/database/client'
 import { restaurants } from '@/database/schemas/restaurants'
 import { app } from '@/http/app'
-import { fakeLogin } from '@/mocks'
+import { firstUserSession } from '@/mocks'
 import { treaty } from '@elysiajs/eden'
 import { beforeEach, describe, expect, it } from 'bun:test'
 import { eq } from 'drizzle-orm'
 
 const api = treaty<typeof app>(app)
-const session = await fakeLogin()
 
 beforeEach(async () => {
   await db
     .delete(restaurants)
-    .where(eq(restaurants.owner, session.response.user.id))
+    .where(eq(restaurants.owner, firstUserSession.response.user.id))
 })
 
 describe('Create Restaurant Route', () => {
@@ -27,19 +26,34 @@ describe('Create Restaurant Route', () => {
   })
 
   it('should not be able to create a new restaurant with wrong body', async () => {
-    const { status } = await api.restaurants.post(
+    const { status, error } = await api.restaurants.post(
       {
         name: 'Johns Pizza 2',
         contact: '',
       },
       {
         headers: {
-          cookie: session.headers.getSetCookie(),
+          cookie: firstUserSession.headers.getSetCookie(),
         },
       }
     )
 
-    expect(status).toBe(422)
+    let responseError: {
+      status: 422
+      value: {
+        type: 'validation'
+        on: string
+        summary?: string
+        message?: string
+        found?: unknown
+        property?: string
+        expected?: string
+      }
+    } = error as typeof responseError
+
+    expect(responseError.status).toBe(422)
+    expect(responseError.value.type).toBe('validation')
+    expect(responseError?.value).toHaveProperty('message')
   })
 
   it('should not be able to create a duplicated restaurant', async () => {
@@ -50,7 +64,7 @@ describe('Create Restaurant Route', () => {
       },
       {
         headers: {
-          cookie: session.headers.getSetCookie(),
+          cookie: firstUserSession.headers.getSetCookie(),
         },
       }
     )
@@ -62,7 +76,7 @@ describe('Create Restaurant Route', () => {
       },
       {
         headers: {
-          cookie: session.headers.getSetCookie(),
+          cookie: firstUserSession.headers.getSetCookie(),
         },
       }
     )
@@ -79,7 +93,7 @@ describe('Create Restaurant Route', () => {
       },
       {
         headers: {
-          cookie: session.headers.getSetCookie(),
+          cookie: firstUserSession.headers.getSetCookie(),
         },
       }
     )
@@ -97,6 +111,11 @@ describe('Create Restaurant Route', () => {
 
     expect(status).toBe(201)
     expect(data).toHaveProperty('id')
-    expect(restaurant.owner).toBe(session.response.user.id)
+    expect(data).toHaveProperty('name')
+    expect(data).toHaveProperty('contact')
+    expect(data).toHaveProperty('owner')
+    expect(data).toHaveProperty('createdAt')
+    expect(data).toHaveProperty('updatedAt')
+    expect(restaurant.owner).toBe(firstUserSession.response.user.id)
   })
 })
