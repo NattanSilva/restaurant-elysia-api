@@ -6,7 +6,10 @@ export default defineConfig({
   out: './src/database/migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    url: env.DATABASE_URL,
+    url:
+      env.SERVER_TYPE_RUNNER !== 'test'
+        ? env.DATABASE_URL
+        : env.TEST_DATABASE_URL,
   },
   casing: 'snake_case',
 })

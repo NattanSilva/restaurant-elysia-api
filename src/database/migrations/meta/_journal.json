@@ -8,6 +8,27 @@
       "when": 1758558242685,
       "tag": "0000_fast_the_captain",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1758567234085,
+      "tag": "0001_fast_micromacro",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1758628643683,
+      "tag": "0002_broad_spiral",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1759584759858,
+      "tag": "0003_spooky_supreme_intelligence",
+      "breakpoints": true
     }
   ]
 }
