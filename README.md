@@ -35,9 +35,6 @@ bun db:migrate
 
 # start develop server server
 bun run dev
-
-# running integration tests(please run the migrations before this)
-bun test:integration
 ```
 
 ## Integration Tests
