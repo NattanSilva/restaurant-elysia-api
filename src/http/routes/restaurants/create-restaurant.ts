@@ -1,6 +1,6 @@
 import { registRestaurant } from '@/app/functions/registRestaurant'
 import Elysia, { t } from 'elysia'
-import { betterAuthPluggin } from '../pluggins/better-auth'
+import { betterAuthPluggin } from '../../pluggins/better-auth'
 
 export const createRestaurantRoute = new Elysia().use(betterAuthPluggin).post(
   '/restaurants',

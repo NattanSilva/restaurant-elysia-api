@@ -3,7 +3,7 @@ import { listRestaurants } from '@/app/functions/listRestaurants'
 import { fakeLogin, type LoginRespose } from '@/mocks'
 import { treaty } from '@elysiajs/eden'
 import { beforeAll, describe, expect, it } from 'bun:test'
-import { app } from '../app'
+import { app } from '../../app'
 
 const api = treaty<typeof app>(app)
 let firstUserSession: LoginRespose = {} as LoginRespose
