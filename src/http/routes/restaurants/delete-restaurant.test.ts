@@ -14,31 +14,35 @@ let firstUserSession: LoginRespose = {} as LoginRespose
 let secondUserSession: LoginRespose = {} as LoginRespose
 let testRestaurantId = ''
 
-beforeAll(async () => {
-  await cleanTestDatabase()
-
-  await insertUserInDatabase('JohnDoe@mail.com', '12345678', 'John Doe')
-  await insertUserInDatabase('faker@mail.com', '12345678', 'Faker')
-
-  firstUserSession = await fakeLogin('JohnDoe@mail.com', '12345678', 'John Doe')
-  secondUserSession = await fakeLogin('faker@mail.com', '12345678', 'Faker')
-
-  const { createdRestaurant } = await registRestaurant(
-    '87999999922',
-    'Product Test Restaurant',
-    firstUserSession.response.user.id,
-    firstUserSession.response.user.email
-  )
-
-  if (!createdRestaurant) {
-    console.error('Error creating test restaurant')
-    process.exit(1)
-  }
-
-  testRestaurantId = createdRestaurant.id
-})
-
 describe('Delete Restaurant Route', () => {
+  beforeAll(async () => {
+    await cleanTestDatabase()
+
+    await insertUserInDatabase('JohnDoe@mail.com', '12345678', 'John Doe')
+    await insertUserInDatabase('faker@mail.com', '12345678', 'Faker')
+
+    firstUserSession = await fakeLogin(
+      'JohnDoe@mail.com',
+      '12345678',
+      'John Doe'
+    )
+    secondUserSession = await fakeLogin('faker@mail.com', '12345678', 'Faker')
+
+    const { createdRestaurant } = await registRestaurant(
+      '87999999922',
+      'Product Test Restaurant',
+      firstUserSession.response.user.id,
+      firstUserSession.response.user.email
+    )
+
+    if (!createdRestaurant) {
+      console.error('Error creating test restaurant')
+      process.exit(1)
+    }
+
+    testRestaurantId = createdRestaurant.id
+  })
+
   it('sould not be able to delete a restaurant with invalid type id', async () => {
     const { status } = await api
       .restaurants({

@@ -23,19 +23,20 @@ export type ErrorValidationResponse = {
 
 const api = treaty<typeof app>(app)
 let firstUserSession: LoginRespose = {} as LoginRespose
-let secondUserSession: LoginRespose = {} as LoginRespose
-
-beforeAll(async () => {
-  await cleanTestDatabase()
-
-  await insertUserInDatabase('JohnDoe@mail.com', '12345678', 'John Doe')
-  await insertUserInDatabase('faker@mail.com', '12345678', 'Faker')
-
-  firstUserSession = await fakeLogin('JohnDoe@mail.com', '12345678', 'John Doe')
-  secondUserSession = await fakeLogin('faker@mail.com', '12345678', 'Faker')
-})
 
 describe('Create Restaurant Route', async () => {
+  beforeAll(async () => {
+    await cleanTestDatabase()
+
+    await insertUserInDatabase('JohnDoe@mail.com', '12345678', 'John Doe')
+
+    firstUserSession = await fakeLogin(
+      'JohnDoe@mail.com',
+      '12345678',
+      'John Doe'
+    )
+  })
+
   it('should not be able to create a new restaurant without authentication', async () => {
     const { status, error } = await api.restaurants.post({
       name: 'Johns Pizza',
@@ -68,7 +69,7 @@ describe('Create Restaurant Route', async () => {
   })
 
   it('should be able to create a new restaurant', async () => {
-    const { status, data, error } = await api.restaurants.post(
+    const { status, data } = await api.restaurants.post(
       {
         name: 'Johns Pizza',
         contact: '87999999977',
