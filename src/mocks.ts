@@ -2,6 +2,7 @@ import kleur from 'kleur'
 import { auth } from './auth'
 import { db } from './database/client'
 import { accounts } from './database/schemas/accounts'
+import { products } from './database/schemas/products'
 import { restaurants } from './database/schemas/restaurants'
 import { sessions } from './database/schemas/sessions'
 import { users } from './database/schemas/users'
@@ -29,6 +30,7 @@ export const cleanTestDatabase = async () => {
   try {
     console.log(kleur.red('📦 Cleaning test database'))
     await db.delete(restaurants)
+    await db.delete(products)
     await db.delete(users)
     await db.delete(sessions)
     await db.delete(accounts)
