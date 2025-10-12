@@ -2,7 +2,7 @@ import { retrieveRestaurant } from '@/app/functions/retrieveRestaurant'
 import { updateRestaurant } from '@/app/functions/updateRestaurant'
 import { db } from '@/database/client'
 import Elysia, { t } from 'elysia'
-import { betterAuthPluggin } from '../pluggins/better-auth'
+import { betterAuthPluggin } from '../../pluggins/better-auth'
 
 export const updateRestaurantRoute = new Elysia().use(betterAuthPluggin).patch(
   '/restaurants/:restaurantId',

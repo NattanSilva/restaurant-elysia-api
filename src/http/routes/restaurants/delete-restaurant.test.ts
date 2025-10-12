@@ -1,20 +1,48 @@
-import { listRestaurants } from '@/app/functions/listRestaurants'
-
-import { fakeLogin, type LoginRespose } from '@/mocks'
+import { registRestaurant } from '@/app/functions/registRestaurant'
+import {
+  cleanTestDatabase,
+  fakeLogin,
+  insertUserInDatabase,
+  type LoginRespose,
+} from '@/mocks'
 import { treaty } from '@elysiajs/eden'
 import { beforeAll, describe, expect, it } from 'bun:test'
-import { app } from '../app'
+import { app } from '../../app'
 
 const api = treaty<typeof app>(app)
 let firstUserSession: LoginRespose = {} as LoginRespose
 let secondUserSession: LoginRespose = {} as LoginRespose
-
-beforeAll(async () => {
-  firstUserSession = await fakeLogin('JohnDoe@mail.com', '12345678', 'John Doe')
-  secondUserSession = await fakeLogin('faker@mail.com', '12345678', 'Faker')
-})
+let testRestaurantId = ''
 
 describe('Delete Restaurant Route', () => {
+  beforeAll(async () => {
+    await cleanTestDatabase()
+
+    await insertUserInDatabase('JohnDoe@mail.com', '12345678', 'John Doe')
+    await insertUserInDatabase('faker@mail.com', '12345678', 'Faker')
+
+    firstUserSession = await fakeLogin(
+      'JohnDoe@mail.com',
+      '12345678',
+      'John Doe'
+    )
+    secondUserSession = await fakeLogin('faker@mail.com', '12345678', 'Faker')
+
+    const { createdRestaurant } = await registRestaurant(
+      '87999999922',
+      'Product Test Restaurant',
+      firstUserSession.response.user.id,
+      firstUserSession.response.user.email
+    )
+
+    if (!createdRestaurant) {
+      console.error('Error creating test restaurant')
+      process.exit(1)
+    }
+
+    testRestaurantId = createdRestaurant.id
+  })
+
   it('sould not be able to delete a restaurant with invalid type id', async () => {
     const { status } = await api
       .restaurants({
@@ -51,10 +79,9 @@ describe('Delete Restaurant Route', () => {
   })
 
   it('sould not be able to delete a restaurant without authentication', async () => {
-    const { restaurants } = await listRestaurants()
     const { status, error } = await api
       .restaurants({
-        restaurantId: restaurants[0].id,
+        restaurantId: testRestaurantId,
       })
       .delete({})
 
@@ -63,10 +90,9 @@ describe('Delete Restaurant Route', () => {
   })
 
   it('sould not be able to delete a restaurant if you are not the owner', async () => {
-    const { restaurants } = await listRestaurants()
     const { status, error } = await api
       .restaurants({
-        restaurantId: restaurants[0].id,
+        restaurantId: testRestaurantId,
       })
       .delete(
         {},
@@ -82,10 +108,9 @@ describe('Delete Restaurant Route', () => {
   })
 
   it('sould be able to delete a restaurant', async () => {
-    const { restaurants } = await listRestaurants()
     const { status } = await api
       .restaurants({
-        restaurantId: restaurants[0].id,
+        restaurantId: testRestaurantId,
       })
       .delete(
         {},

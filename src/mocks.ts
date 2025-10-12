@@ -1,7 +1,7 @@
-import kleur from 'kleur'
 import { auth } from './auth'
 import { db } from './database/client'
 import { accounts } from './database/schemas/accounts'
+import { products } from './database/schemas/products'
 import { restaurants } from './database/schemas/restaurants'
 import { sessions } from './database/schemas/sessions'
 import { users } from './database/schemas/users'
@@ -27,8 +27,8 @@ export type LoginRespose = {
 
 export const cleanTestDatabase = async () => {
   try {
-    console.log(kleur.red('📦 Cleaning test database'))
     await db.delete(restaurants)
+    await db.delete(products)
     await db.delete(users)
     await db.delete(sessions)
     await db.delete(accounts)
@@ -44,7 +44,6 @@ export const insertUserInDatabase = async (
   password: string,
   name: string
 ) => {
-  console.log(kleur.green(`📦 Creating ${name} fake user account`))
   try {
     await auth.api.signUpEmail({
       returnHeaders: true,
@@ -63,7 +62,6 @@ export const insertUserInDatabase = async (
 
 export async function fakeLogin(email: string, password: string, name: string) {
   try {
-    console.log(kleur.green(`📦 Logging ${name} fake user account`))
     const response = await auth.api.signInEmail({
       returnHeaders: true,
       body: {

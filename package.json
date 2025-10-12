@@ -4,8 +4,7 @@
   "scripts": {
     "dev": "bun run --watch src/http/server.ts",
     "db:generate": "bun --env-file .env --bun drizzle-kit generate",
-    "db:migrate": "bun --env-file .env --bun drizzle-kit migrate",
-    "test:integration": "bun test --env-file .env --preload ./src/setup-test.ts ./src/integration.test.ts"
+    "db:migrate": "bun --env-file .env --bun drizzle-kit migrate"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.4.0",

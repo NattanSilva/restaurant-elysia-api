@@ -1,18 +1,42 @@
 import { app } from '@/http/app'
-import { fakeLogin, type LoginRespose } from '@/mocks'
+import {
+  cleanTestDatabase,
+  fakeLogin,
+  insertUserInDatabase,
+  type LoginRespose,
+} from '@/mocks'
 import { treaty } from '@elysiajs/eden'
 import { beforeAll, describe, expect, it } from 'bun:test'
 
+export type ErrorValidationResponse = {
+  status: 422
+  value: {
+    type: 'validation'
+    on: string
+    summary?: string
+    message?: string
+    found?: unknown
+    property?: string
+    expected?: string
+  }
+}
+
 const api = treaty<typeof app>(app)
 let firstUserSession: LoginRespose = {} as LoginRespose
-let secondUserSession: LoginRespose = {} as LoginRespose
-
-beforeAll(async () => {
-  firstUserSession = await fakeLogin('JohnDoe@mail.com', '12345678', 'John Doe')
-  secondUserSession = await fakeLogin('faker@mail.com', '12345678', 'Faker')
-})
 
 describe('Create Restaurant Route', async () => {
+  beforeAll(async () => {
+    await cleanTestDatabase()
+
+    await insertUserInDatabase('JohnDoe@mail.com', '12345678', 'John Doe')
+
+    firstUserSession = await fakeLogin(
+      'JohnDoe@mail.com',
+      '12345678',
+      'John Doe'
+    )
+  })
+
   it('should not be able to create a new restaurant without authentication', async () => {
     const { status, error } = await api.restaurants.post({
       name: 'Johns Pizza',
@@ -36,18 +60,8 @@ describe('Create Restaurant Route', async () => {
       }
     )
 
-    let responseError: {
-      status: 422
-      value: {
-        type: 'validation'
-        on: string
-        summary?: string
-        message?: string
-        found?: unknown
-        property?: string
-        expected?: string
-      }
-    } = error as typeof responseError
+    let responseError: ErrorValidationResponse =
+      error as ErrorValidationResponse
 
     expect(responseError.status).toBe(422)
     expect(responseError.value.type).toBe('validation')
@@ -58,7 +72,7 @@ describe('Create Restaurant Route', async () => {
     const { status, data } = await api.restaurants.post(
       {
         name: 'Johns Pizza',
-        contact: '87999999999',
+        contact: '87999999977',
       },
       {
         headers: {
@@ -92,7 +106,7 @@ describe('Create Restaurant Route', async () => {
     const { status, error } = await api.restaurants.post(
       {
         name: 'Johns Pizza',
-        contact: '87999999999',
+        contact: '87999999977',
       },
       {
         headers: {

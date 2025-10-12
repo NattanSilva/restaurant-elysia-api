@@ -7,7 +7,7 @@ The **Restaurant API** is a backend application built with **Bun** and **ElysiaJ
 - Create, read, update, and delete restaurants
 - Interactive documentation via **OpenAPI**
 - Integration tests
-- User authentication and authorization with **Better Auth**  
+- User authentication and authorization with **Better Auth**
 - Database management via **Drizzle ORM**
 - Docker compose to use 2 **PostgreSQL** databases(test and development)
 
@@ -15,8 +15,8 @@ The **Restaurant API** is a backend application built with **Bun** and **ElysiaJ
 
 - **Bun**: fast JavaScript/TypeScript runtime
 - **ElysiaJS**: minimalistic framework for building APIs
-- **Better Auth**: secure user authentication  
-- **Drizzle ORM**: type-safe database ORM 
+- **Better Auth**: secure user authentication
+- **Drizzle ORM**: type-safe database ORM
 - **OpenAPI**: standardized and automatic API documentation
 
 ## Development
@@ -41,6 +41,8 @@ bun run dev
 
 To see all integration tests run:
 
+> 💡 Change the <code>SERVER_TYPE_RUNNER</code> key in <code>.env</code> to **"test"** before to run all tests.
+
 ```bash
 # iniciate the docker postgres
 docker compose down -v && docker compose up -d
@@ -52,7 +54,7 @@ bun install
 bun db:migrate
 
 # running integration tests(please run the migrations before this)
-bun test:integration
+bun test
 ```
 
 Open <code>http://localhost:3333</code> with your browser to see the result and use <code>http://localhost:3333/openapi</code> route to see the api documentation.

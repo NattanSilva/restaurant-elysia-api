@@ -1,48 +1,56 @@
-import { fakeLogin, type LoginRespose } from '@/mocks'
+import { registRestaurant } from '@/app/functions/registRestaurant'
+import {
+  cleanTestDatabase,
+  fakeLogin,
+  insertUserInDatabase,
+  type LoginRespose,
+} from '@/mocks'
 import { treaty } from '@elysiajs/eden'
 import { beforeAll, describe, expect, it } from 'bun:test'
-import { app } from '../app'
+import { app } from '../../app'
+import type { Restaurant } from './retrieve-restaurant.test'
 
 const api = treaty<typeof app>(app)
-let restaurantId = ''
 let firstUserSession: LoginRespose = {} as LoginRespose
 let secondUserSession: LoginRespose = {} as LoginRespose
-
-beforeAll(async () => {
-  firstUserSession = await fakeLogin('JohnDoe@mail.com', '12345678', 'John Doe')
-  secondUserSession = await fakeLogin('faker@mail.com', '12345678', 'Faker')
-})
-
-beforeAll(async () => {
-  const { data, status } = await api.restaurants.post(
-    {
-      name: 'Faker Pizza',
-      contact: '87999999998',
-    },
-    {
-      headers: {
-        cookie: secondUserSession.headers.getSetCookie(),
-      },
-    }
-  )
-
-  expect(status).toBe(201)
-
-  type Restaurant = {
-    id: string
-    name: string
-    contact: string
-    owner: string
-    createdAt: string
-    updatedAt: string
-  }
-
-  const restaurant = data as Restaurant
-
-  restaurantId = restaurant.id
-})
+let testRestaurant: Restaurant = {} as Restaurant
 
 describe('Update Restaurant Route', () => {
+  beforeAll(async () => {
+    await cleanTestDatabase()
+
+    await insertUserInDatabase('JohnDoe@mail.com', '12345678', 'John Doe')
+    await insertUserInDatabase('faker@mail.com', '12345678', 'Faker')
+
+    firstUserSession = await fakeLogin(
+      'JohnDoe@mail.com',
+      '12345678',
+      'John Doe'
+    )
+    secondUserSession = await fakeLogin('faker@mail.com', '12345678', 'Faker')
+
+    const { createdRestaurant, status } = await registRestaurant(
+      '87999999922',
+      'Product Test Restaurant',
+      secondUserSession.response.user.id,
+      secondUserSession.response.user.email
+    )
+
+    if (status !== 201 || !createdRestaurant) {
+      console.error('Error creating test restaurant')
+      process.exit(1)
+    }
+
+    testRestaurant = createdRestaurant
+
+    await registRestaurant(
+      '87999999999',
+      'Same Restaurant',
+      firstUserSession.response.user.id,
+      firstUserSession.response.user.email
+    )
+  })
+
   it('sould not be able to update a restaurant with invalid type id', async () => {
     const { status } = await api
       .restaurants({
@@ -80,7 +88,7 @@ describe('Update Restaurant Route', () => {
   it('sould not be able to update a restaurant without authentication', async () => {
     const { status, error } = await api
       .restaurants({
-        restaurantId: restaurantId,
+        restaurantId: testRestaurant.id,
       })
       .patch({
         name: 'Faker Pizza UPDATED',
@@ -94,7 +102,7 @@ describe('Update Restaurant Route', () => {
   it('sould not be able to update a restaurant if you are not the owner', async () => {
     const { status, error } = await api
       .restaurants({
-        restaurantId: restaurantId,
+        restaurantId: testRestaurant.id,
       })
       .patch(
         {
@@ -115,11 +123,11 @@ describe('Update Restaurant Route', () => {
   it('sould not be able to update a restaurant to repeated camp', async () => {
     const { status, error } = await api
       .restaurants({
-        restaurantId: restaurantId,
+        restaurantId: testRestaurant.id,
       })
       .patch(
         {
-          name: 'Faker Pizza UPDATED',
+          name: 'Same Restaurant',
           contact: '87999999999',
         },
         {
@@ -136,7 +144,7 @@ describe('Update Restaurant Route', () => {
   it('sould be able to update a restaurant', async () => {
     const { status, data } = await api
       .restaurants({
-        restaurantId: restaurantId,
+        restaurantId: testRestaurant.id,
       })
       .patch(
         {
@@ -158,5 +166,6 @@ describe('Update Restaurant Route', () => {
     expect(data).toHaveProperty('owner')
     expect(data).toHaveProperty('createdAt')
     expect(data).toHaveProperty('updatedAt')
+    expect(data?.name).toBe('Faker Pizza UPDATED')
   })
 })

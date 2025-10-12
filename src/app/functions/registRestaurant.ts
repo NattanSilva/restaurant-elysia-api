@@ -8,8 +8,8 @@ export const registRestaurant = async (
   email: string
 ) => {
   const repeatedRestaurant = await db.query.restaurants.findFirst({
-    where: (restaurants, { eq }) =>
-      eq(restaurants.contact, contact) || eq(restaurants.name, name),
+    where: (restaurants, { eq, or }) =>
+      or(eq(restaurants.contact, contact), eq(restaurants.email, email)),
   })
 
   if (repeatedRestaurant) {
@@ -27,7 +27,7 @@ export const registRestaurant = async (
     .returning()
 
   if (!createdRestaurant[0]) {
-    return { createdRestaurant: null }
+    return { createdRestaurant: null, status: 400 }
   }
 
   return { createdRestaurant: createdRestaurant[0], status: 201 }

@@ -1,7 +1,7 @@
 import { deleteRestaurant } from '@/app/functions/deleteRestaurant'
 import { retrieveRestaurant } from '@/app/functions/retrieveRestaurant'
 import Elysia, { t } from 'elysia'
-import { betterAuthPluggin } from '../pluggins/better-auth'
+import { betterAuthPluggin } from '../../pluggins/better-auth'
 
 export const deleteRestaurantRoute = new Elysia().use(betterAuthPluggin).delete(
   '/restaurants/:restaurantId',
