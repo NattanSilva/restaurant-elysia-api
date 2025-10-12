@@ -205,7 +205,7 @@ describe('Create Product Route', () => {
   })
 
   it('should be able to create a new product', async () => {
-    const { status, data, error } = await api.products.post(
+    const { status, data } = await api.products.post(
       {
         imageUrl: 'https://example.com/image.jpg',
         name: 'Double Cheese Pizza',

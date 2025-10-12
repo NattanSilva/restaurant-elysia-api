@@ -20,8 +20,8 @@ export const retrieveProductRoute = new Elysia().use(betterAuthPluggin).get(
     auth: false,
     detail: {
       tags: ['Products'],
-      description: 'List all Products',
-      operationId: 'listProducts',
+      description: 'Retrieve a Product',
+      operationId: 'retrieveProduct',
     },
     params: t.Object({
       productId: t.String({

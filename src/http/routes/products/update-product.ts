@@ -1,4 +1,5 @@
 import { updateProduct } from '@/app/functions/products/updateProduct'
+import { retrieveRestaurant } from '@/app/functions/retrieveRestaurant'
 import { db } from '@/database/client'
 import Elysia, { t } from 'elysia'
 import { betterAuthPluggin } from '../../pluggins/better-auth'
@@ -19,6 +20,16 @@ export const updateProductRoute = new Elysia().use(betterAuthPluggin).patch(
       })
     }
 
+    const { restaurant: currentRestaurant } = await retrieveRestaurant(
+      currentProduct.producer
+    )
+
+    if (!currentRestaurant || currentRestaurant.owner !== user.id) {
+      return status(401, {
+        message: 'You are not the owner of this product.',
+      })
+    }
+
     const { updatedProduct } = await updateProduct({
       productId,
       data: {
@@ -35,8 +46,8 @@ export const updateProductRoute = new Elysia().use(betterAuthPluggin).patch(
     auth: true,
     detail: {
       tags: ['Products'],
-      description: 'List all Products',
-      operationId: 'listProducts',
+      description: 'Update a Product',
+      operationId: 'updateProduct',
       security: [
         {
           bearerAuth: [],
@@ -103,6 +114,11 @@ export const updateProductRoute = new Elysia().use(betterAuthPluggin).patch(
         }),
         updatedAt: t.Date({
           examples: [new Date()],
+        }),
+      }),
+      401: t.Object({
+        message: t.String({
+          examples: ['Unauthorized.'],
         }),
       }),
       404: t.Object({
