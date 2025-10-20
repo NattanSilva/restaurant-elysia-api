@@ -1,9 +1,12 @@
+import { orderSchema } from '@/app/schemas/orders'
 import { productSchema } from '@/app/schemas/product'
 import { restaurantSchema } from '@/app/schemas/restaurant'
 import cors from '@elysiajs/cors'
 import { openapi } from '@elysiajs/openapi'
 import { Elysia } from 'elysia'
 import { betterAuthPluggin, OpenAPI } from '../http/pluggins/better-auth'
+import { createOrderRoute } from './routes/orders/create-order'
+import { listProductOrdersRoute } from './routes/orders/list-product-orders'
 import { createProductRoute } from './routes/products/create-product'
 import { deleteProductRoute } from './routes/products/delete-product'
 import { listAllProductsRoute } from './routes/products/list-products'
@@ -21,6 +24,7 @@ const components = {
     ...(await OpenAPI.components).schemas,
     Restaurant: restaurantSchema,
     Product: productSchema,
+    Order: orderSchema,
   },
 }
 
@@ -52,6 +56,8 @@ export const app = new Elysia()
   .use(retrieveProductRoute)
   .use(updateProductRoute)
   .use(deleteProductRoute)
+  .use(createOrderRoute)
+  .use(listProductOrdersRoute)
   .use(
     cors({
       origin: '*',

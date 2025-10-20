@@ -43,6 +43,13 @@
       "when": 1759673445384,
       "tag": "0005_cuddly_big_bertha",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1760300560756,
+      "tag": "0006_real_korg",
+      "breakpoints": true
     }
   ]
 }
